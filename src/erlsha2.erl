@@ -384,10 +384,12 @@ sha512_final(Context) ->
 %% @doc Returns a SHA-512/256 hexadecimal digest.
 %%
 sha512_256(M) when is_binary(M) ->
-    digest_bin(M, ?H512_256, 128, fun sha512_pad/1, fun sha512/2, 64);
+    Full = digest_bin(M, ?H512_256, 128, fun sha512_pad/1, fun sha512/2, 64),
+    binary:part(Full, {0, 32});
 sha512_256(Iolist) ->
     Bin = list_to_binary(Iolist),
-    digest_bin(Bin, ?H512_256, 128, fun sha512_pad/1, fun sha512/2, 64).
+    Full = digest_bin(Bin, ?H512_256, 128, fun sha512_pad/1, fun sha512/2, 64),
+    binary:part(Full, {0, 32}).
 
 %% @spec sha512_256_init() -> context()
 %% where
