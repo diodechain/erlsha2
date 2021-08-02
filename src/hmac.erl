@@ -22,7 +22,7 @@
 -ifdef(USE_CRYPTO_SHA_MAC).
 -define(CRYPTO_HMAC(Key,Data), crypto:sha_mac(Key,Data)).
 -else.
--define(CRYPTO_HMAC(Key,Data), crypto:hmac(sha,Key,Data)).
+-define(CRYPTO_HMAC(Key,Data), crypto:mac(hmac,sha,Key,Data)).
 -endif.
 
 -define(SHA_224_BLOCKSIZE, 64).
