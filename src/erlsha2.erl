@@ -43,11 +43,12 @@
 %%%
 
 -module(erlsha2).
--export([sha224/1, sha256/1, sha384/1, sha512/1]).
+-export([sha224/1, sha256/1, sha384/1, sha512/1, sha512_256/1]).
 -export([sha224_init/0, sha224_update/2, sha224_final/1]).
 -export([sha256_init/0, sha256_update/2, sha256_final/1]).
 -export([sha384_init/0, sha384_update/2, sha384_final/1]).
 -export([sha512_init/0, sha512_update/2, sha512_final/1]).
+-export([sha512_256_init/0, sha512_256_update/2, sha512_256_final/1]).
 -version("2.2.1").
 -on_load(init/0).
 
@@ -64,6 +65,11 @@
 -define(H512, [16#6A09E667F3BCC908, 16#BB67AE8584CAA73B, 16#3C6EF372FE94F82B,
                16#A54FF53A5F1D36F1, 16#510E527FADE682D1, 16#9B05688C2B3E6C1F,
                16#1F83D9ABFB41BD6B, 16#5BE0CD19137E2179]).
+
+-define(H512_256, [16#22312194FC2BF72C, 16#9F555FA3C84C64C2,
+                   16#2393B86B6F53B151, 16#963877195940EABD,
+                   16#96283EE2A88EFFE3, 16#BE5E1E2553863992,
+                   16#2B0199FC2C85B8AA, 16#EB72DDC81C52CA2]).
 
 -define(K256, <<16#428A2F98:32/big-unsigned, 16#71374491:32/big-unsigned,
                 16#B5C0FBCF:32/big-unsigned, 16#E9B5DBA5:32/big-unsigned,
@@ -189,16 +195,16 @@
 %%      implementations below.
 %%
 init() ->
-    SoName = filename:join(case code:priv_dir(?MODULE) of
-                               {error, bad_name} ->
-                                   %% this is here for testing purposes
-                                   filename:join(
-                                     [filename:dirname(
-                                        code:which(?MODULE)),"..","priv"]);
-                               Dir ->
-                                   Dir
-                           end, atom_to_list(?MODULE) ++ "_nif"),
-    erlang:load_nif(SoName, 0),
+    %% SoName = filename:join(case code:priv_dir(?MODULE) of
+    %%                            {error, bad_name} ->
+    %%                                %% this is here for testing purposes
+    %%                                filename:join(
+    %%                                  [filename:dirname(
+    %%                                     code:which(?MODULE)),"..","priv"]);
+    %%                            Dir ->
+    %%                                Dir
+    %%                        end, atom_to_list(?MODULE) ++ "_nif"),
+    %% erlang:load_nif(SoName, 0),
     ok.
 
 %% @spec sha224(message()) -> digest()
@@ -368,6 +374,49 @@ sha512_update(Context, M) ->
 %%      message digest.
 %%
 sha512_final(Context) ->
+    sha512(Context).
+
+
+%% @spec sha512_256(message()) -> digest()
+%% where
+%%       message() = binary() | iolist()
+%%       digest()  = binary()
+%% @doc Returns a SHA-512/256 hexadecimal digest.
+%%
+sha512_256(M) when is_binary(M) ->
+    digest_bin(M, ?H512_256, 128, fun sha512_pad/1, fun sha512/2, 64);
+sha512_256(Iolist) ->
+    Bin = list_to_binary(Iolist),
+    digest_bin(Bin, ?H512_256, 128, fun sha512_pad/1, fun sha512/2, 64).
+
+%% @spec sha512_256_init() -> context()
+%% where
+%%       context()  = binary()
+%% @doc Creates a SHA-512/256 context to be in subsequent calls to
+%%      sha512_256_update/2.
+%%
+sha512_256_init() ->
+    <<>>.
+
+%% @spec sha512_256_update(context(), message()) -> newcontext()
+%% where
+%%       message()     = binary() | iolist()
+%%       context()     = binary()
+%%       newcontext()  = binary()
+%% @doc Updates a SHA-512/256 context with message data and returns a new
+%%      context.
+%%
+sha512_256_update(Context, M) ->
+    list_to_binary([Context, M]).
+
+%% @spec sha512_256_final(context()) -> digest()
+%% where
+%%       context() = binary()
+%%       digest()  = binary()
+%% @doc Finishes the update of a SHA-512/256 Context and returns the computed
+%%      message digest.
+%%
+sha512_256_final(Context) ->
     sha512(Context).
 
 
