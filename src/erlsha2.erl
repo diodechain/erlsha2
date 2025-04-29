@@ -50,7 +50,6 @@
 -export([sha512_init/0, sha512_update/2, sha512_final/1]).
 -export([sha512_256_init/0, sha512_256_update/2, sha512_256_final/1]).
 -version("2.2.1").
--on_load(init/0).
 
 -define(H224, [16#C1059ED8, 16#367CD507, 16#3070DD17, 16#F70E5939,
                16#FFC00B31, 16#68581511, 16#64F98FA7, 16#BEFA4FA4]).
@@ -187,25 +186,6 @@
 
 -define(ADD32(X, Y), (X + Y) band 16#FFFFFFFF).
 -define(ADD64(X, Y), (X + Y) band 16#FFFFFFFFFFFFFFFF).
-
-%% @spec init() -> ok
-%% @doc Initialize sha2 NIF.
-%%      If the platform supports NIFs, load the NIF library. If the library
-%%      isn't available, still return ok so we fall back to the Erlang
-%%      implementations below.
-%%
-init() ->
-    %% SoName = filename:join(case code:priv_dir(?MODULE) of
-    %%                            {error, bad_name} ->
-    %%                                %% this is here for testing purposes
-    %%                                filename:join(
-    %%                                  [filename:dirname(
-    %%                                     code:which(?MODULE)),"..","priv"]);
-    %%                            Dir ->
-    %%                                Dir
-    %%                        end, atom_to_list(?MODULE) ++ "_nif"),
-    %% erlang:load_nif(SoName, 0),
-    ok.
 
 %% @spec sha224(message()) -> digest()
 %% where

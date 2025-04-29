@@ -16,7 +16,6 @@
          hmac256/2,
          hmac384/2,
          hmac512/2]).
--on_load(init/0).
 -version("2.2.1").
 
 -ifdef(USE_CRYPTO_SHA_MAC).
@@ -33,21 +32,6 @@
 -define(HMAC_STRING, 1).
 -define(HMAC_UPPER, 2).
 -define(DEFAULT_HMAC_FLAGS, (?HMAC_STRING bor ?HMAC_UPPER)).
-
-%% @spec init() -> ok | {error, term()}
-%% @doc Initialize hmac NIF.
-%%
-init() ->
-    SoName = filename:join(case code:priv_dir(?MODULE) of
-                               {error, bad_name} ->
-                                   %% this is here for testing purposes
-                                   filename:join(
-                                     [filename:dirname(
-                                        code:which(?MODULE)),"..","priv"]);
-                               Dir ->
-                                   Dir
-                           end, atom_to_list(?MODULE) ++ "_nif"),
-    erlang:load_nif(SoName, 0).
 
 %% @spec hexlify(binary()) -> list()
 %% @doc Convert binary to equivalent hexadecimal string.
@@ -95,8 +79,10 @@ hexlify(Binary, Opts) when is_binary(Binary), is_list(Opts) ->
                         end, ?DEFAULT_HMAC_FLAGS, Opts),
     hexlify_nif(Binary, Flags).
 
-hexlify_nif(_Bin, _Opts) ->
-    erlang:nif_error(nif_not_loaded).
+hexlify_nif(_Bin, 0) -> string:lowercase(binary:encode_hex(_Bin));
+hexlify_nif(_Bin, ?HMAC_STRING) -> binary:bin_to_list(hexlify_nif(_Bin, 0));
+hexlify_nif(_Bin, ?HMAC_UPPER) -> string:uppercase(binary:encode_hex(_Bin));
+hexlify_nif(_Bin, 3) -> binary:bin_to_list(hexlify_nif(_Bin, ?HMAC_UPPER)).
 
 %% @spec hmac224(key(), data()) -> mac()
 %% where

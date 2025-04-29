@@ -345,12 +345,18 @@ sha512_update_test(Vectors) ->
                   end, ExpectedActual),
     ok.
 
+testvectors_dir() ->
+  case filelib:is_dir("../test") of
+    true -> "../test";
+    false -> "./test"
+  end.
+
 read_test_vectors() ->
     read_test_vectors([], 1).
 read_test_vectors(Vectors, 19) ->
     lists:reverse(Vectors);
 read_test_vectors(Vectors, Num) ->
-    VecFile = io_lib:format("../test/testvectors/vector~3.10.0b.dat", [Num]),
+    VecFile = io_lib:format("~s/testvectors/vector~3.10.0b.dat", [testvectors_dir(), Num]),
     {ok, Vector} = file:read_file(lists:flatten(VecFile)),
     read_test_vectors([Vector|Vectors], Num+1).
 
