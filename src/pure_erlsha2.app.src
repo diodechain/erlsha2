@@ -1,7 +1,7 @@
 {application, pure_erlsha2,
  [
   {description, "SHA-2 Pure Erlang library"},
-  {vsn, "2.2.1"},
+  {vsn, "2.2.2"},
   {modules, []},
   {registered, []},
   {applications, [kernel,stdlib]},
