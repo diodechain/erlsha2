@@ -1,15 +1,18 @@
-# SHA-224, SHA-256, SHA-384, SHA-512 implemented in Erlang NIFs.
+# SHA-224, SHA-256, SHA-384, SHA-512 implemented in __PURE__ Erlang.
+
+## Fork from 
+
+* https://github.com/faried/erlsha2/tree/sha512-truncated
 
 ## Description
 
-The **erlsha2** library application implements the SHA-2 Secure Hash
-Standard (SHA-224, SHA-256, SHA-384, SHA-512) using Erlang NIFs. (It
-also provides pure Erlang implementations, though they are much slower
-than the C NIF implementations.) It also includes HMAC wrappers for
-the SHA-2 functions.
+The **pure_erlsha2** library application implements the **missing** 
+SHA-2 Secure Hash Standard (SHA-224, SHA-256, SHA-384, SHA-512) using pure Erlang. 
+It also includes HMAC wrappers for the SHA-2 functions.
 
 See the following links for details:
 
+* [OTP Missing digest issue](https://github.com/erlang/otp/issues/5087)
 * [Secure Hash Standard (PDF)](http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf)
 * [Wikipedia SHA1 article](http://en.wikipedia.org/wiki/SHA1)
 
@@ -26,7 +29,7 @@ This implementation replaces and obsoletes the
 
 ## Building and Installing
 
-The **erlsha2** app is built with
+The **pure_erlsha2** app is built with
 [rebar](https://github.com/basho/rebar), which must be in the command
 `PATH`.
 
@@ -43,4 +46,4 @@ If you run into any build trouble, first make sure the version of
 
 ### Erlang Version
 
-The **erlsha2** app requires Erlang R14B or later.
+The **pure_erlsha2** app requires OTP-24 or later.
