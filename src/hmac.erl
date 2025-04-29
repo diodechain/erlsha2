@@ -15,8 +15,9 @@
          hmac224/2,
          hmac256/2,
          hmac384/2,
-         hmac512/2]).
--version("2.2.1").
+         hmac512/2,
+         hmac512_256/2]).
+-version("2.2.2").
 
 -ifdef(USE_CRYPTO_SHA_MAC).
 -define(CRYPTO_HMAC(Key,Data), crypto:sha_mac(Key,Data)).
@@ -123,6 +124,16 @@ hmac384(Key, Data) ->
 %%
 hmac512(Key, Data) ->
     hmac(Key, Data, fun erlsha2:sha512/1, ?SHA_512_BLOCKSIZE).
+
+%% @spec hmac512(key(), data()) -> mac()
+%% where
+%%       key()  = iolist() | binary()
+%%       data() = iolist() | binary()
+%%       mac()  = binary()
+%% @doc Compute a SHA-512/256 MAC message authentication code from key and data.
+%%
+hmac512_256(Key, Data) ->
+    hmac(Key, Data, fun erlsha2:sha512_256/1, ?SHA_512_BLOCKSIZE).
 
 %% @spec hmac(key(), data()) -> mac()
 %% where

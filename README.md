@@ -1,8 +1,14 @@
 # SHA-224, SHA-256, SHA-384, SHA-512 implemented in __PURE__ Erlang.
 
-## Fork from 
-
+## Forked from 
 * https://github.com/faried/erlsha2/tree/sha512-truncated
+
+## New functions
+
+```erlang
+hmac:hmac512_256(Key, Data).
+erlsha2:sha512_256(Data).
+```
 
 ## Description
 

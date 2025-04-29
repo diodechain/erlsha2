@@ -1,9 +1,11 @@
 {application, pure_erlsha2,
  [
-  {description, "SHA-2 Erlang/C library"},
+  {description, "SHA-2 Pure Erlang library"},
   {vsn, "2.2.1"},
   {modules, []},
   {registered, []},
   {applications, [kernel,stdlib]},
-  {env, []}
+  {env, []},
+  {licenses, ["MIT"]},
+  {links, [{"Github", "https://github.com/diodechain/erlsha2"}]}
  ]}.
